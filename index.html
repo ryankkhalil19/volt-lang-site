@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volt Programming Language</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="hero">
+        <div class="container">
+            <h1>Volt</h1>
+            <p>A strictly typed, schematic-based programming language.</p>
+            <a href="https://github.com/ryankkhalil19/volt-interpreter" class="btn">View on GitHub</a>
+        </div>
+    </header>
+
+    <section class="philosophy container">
+        <h2>Purpose & Philosophy</h2>
+        <p>Volt replaces abstract control flow with physical hardware schematics. It forces developers to manage memory and execution paths explicitly through continuous traces. Designed for embedded systems and performance-dependent environments, Volt ensures memory safety by physically requiring all data to be routed to a terminal Ground component. If a trace is left open, the code simply will not compile.</p>
+    </section>
+
+    <section class="syntax container">
+        <h2>Core Syntax</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Traces <code>===&gt;</code></h3>
+                <p>The core mechanism for pushing data payloads across the board from one node to the next.</p>
+            </div>
+            <div class="card">
+                <h3>Capacitors <code>||[32v]</code></h3>
+                <p>Strictly typed variables. The voltage bracket acts as a rigid byte constraint.</p>
+            </div>
+            <div class="card">
+                <h3>Resistors <code>/\/\/\</code></h3>
+                <p>Used to safely mutate or cast data to match the requirements of downstream components.</p>
+            </div>
+            <div class="card">
+                <h3>Ground <code>_|_</code></h3>
+                <p>Explicit garbage collection. Terminates traces securely to prevent compilation failure.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="examples container">
+        <h2>Sample Circuit: Hello World</h2>
+        <pre><code>"Hello World" ===> ||[32v] message ===> [=][PrintNode] ===> _|_ ;</code></pre>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Built by Brandon & Partner for the Final Project.</p>
+        </div>
+    </footer>
+</body>
+</html>
