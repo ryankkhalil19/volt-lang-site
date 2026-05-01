@@ -39,6 +39,7 @@
 html,
 body {
     min-height: 100%;
+    background-color: #000;
 }
 
 body {
@@ -151,10 +152,7 @@ p {
 
 .panel-hero::before {
     inset: 0;
-    background-image:
-        radial-gradient(circle at 50% 58%, rgba(255, 225, 65, 0.17), transparent 30%),
-        linear-gradient(90deg, transparent 0 32%, rgba(255, 225, 65, 0.2) 32% 32.2%, transparent 32.2% 68%, rgba(255, 225, 65, 0.2) 68% 68.2%, transparent 68.2%),
-        linear-gradient(180deg, transparent 0 16%, rgba(255, 225, 65, 0.13) 16% 16.2%, transparent 16.2% 84%, rgba(255, 225, 65, 0.1) 84% 84.2%, transparent 84.2%);
+    background-image: radial-gradient(circle at 50% 58%, rgba(255, 225, 65, 0.17), transparent 30%);
     opacity: 0.28;
 }
 
