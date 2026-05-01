@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Volt: a strictly typed, schematic-inspired language with explicit memory lifecycle. Implementation and semantics match the TextX-based volt-interpreter on GitHub.">
     <title>Volt Programming Language</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -16,74 +17,137 @@
             <h1>
                 <span class="hero-title-main">Volt</span>
             </h1>
-            <p>A strictly typed, schematic-based programming language.</p>
-            <a href="https://github.com/ryankkhalil19/volt-interpreter" class="btn">View on GitHub</a>
+            <p>A strictly typed, schematic-inspired programming language with explicit memory lifecycle control. Reference implementation: TextX grammar and interpreter in <a href="https://github.com/ryankkhalil19/volt-interpreter">volt-interpreter</a>.</p>
+            <a href="https://github.com/ryankkhalil19/volt-interpreter" class="btn">View interpreter on GitHub</a>
         </div>
     </header>
 
     <main class="site-main">
-        <section class="philosophy panel panel-section">
+        <section class="guarantees panel panel-section">
             <div class="container">
-                <h2>Purpose & Philosophy</h2>
-                <p>Volt replaces abstract control flow with physical hardware schematics. It forces developers to manage memory and execution paths explicitly through continuous traces. Designed for embedded systems and performance-dependent environments, Volt ensures memory safety by physically requiring all data to be routed to a terminal Ground component. If a trace is left open, the code simply will not compile.</p>
+                <h2>Core Guarantees</h2>
+                <ul class="doc-list">
+                    <li><strong>Explicit allocation/deallocation:</strong> variables are created only via voltage source through typed storage into <code>||</code> capacitor stores and released via <code>_|_</code> grounding.</li>
+                    <li><strong>Compile-time leak rejection:</strong> path-sensitive static analysis rejects programs where any allocated source survives termination on any control-flow path.</li>
+                    <li><strong>No GC dependency:</strong> the runtime does not rely on garbage collection for language memory lifecycle.</li>
+                    <li><strong>Physically constrained memory:</strong> integer writes respect signed/unsigned bit width, including non-byte-aligned widths such as <code>9v</code>.</li>
+                    <li><strong>Deterministic cleanup on faults:</strong> the runtime clears remaining allocations on termination, including errors.</li>
+                </ul>
             </div>
-    </section>
+        </section>
 
         <section class="syntax panel panel-section">
             <div class="container">
                 <h2>Core Syntax</h2>
                 <div class="grid">
                     <article class="card chip">
-                        <h3>Traces <code>===&gt;</code></h3>
-                        <p>The core mechanism for pushing data payloads across the board from one node to the next.</p>
+                        <h3>Pipe trace</h3>
+                        <div class="card-syntax"><code>===&gt;</code></div>
+                        <p class="card-desc">Links data flow along a statement.</p>
                     </article>
                     <article class="card chip">
-                        <h3>Capacitors <code>||[32v]</code></h3>
-                        <p>Strictly typed variables. The voltage bracket acts as a rigid byte constraint.</p>
+                        <h3>Typed storage</h3>
+                        <div class="card-syntax"><code>[+Nv-] / [-Nv+]</code></div>
+                        <p class="card-desc">Fixed-width cell: unsigned vs signed by rail polarity.</p>
                     </article>
                     <article class="card chip">
-                        <h3>Resistors <code>/\/\/\</code></h3>
-                        <p>Used to safely mutate or cast data to match the requirements of downstream components.</p>
+                        <h3>Capacitor store</h3>
+                        <div class="card-syntax"><code>|| name</code></div>
+                        <p class="card-desc">Binds or updates the named variable.</p>
                     </article>
                     <article class="card chip">
-                        <h3>Ground <code>_|_</code></h3>
-                        <p>Explicit garbage collection. Terminates traces securely to prevent compilation failure.</p>
+                        <h3>Ground</h3>
+                        <div class="card-syntax"><code>_|_</code></div>
+                        <p class="card-desc">Ends the trace and deallocates what it carried.</p>
                     </article>
                 </div>
             </div>
         </section>
 
+        <section class="snapshot panel panel-section">
+            <div class="container">
+                <h2>Memory Declaration Example</h2>
+                <div class="code-shell" role="region" aria-label="Volt memory declaration">
+                    <pre><code>"admin" ===&gt; [+40v-] ===&gt; || username ;</code></pre>
+                </div>
+                <p class="syntax-caption">Initialize a 40-bit unsigned variable named <code>username</code> with the value <code>"admin"</code>.</p>
+            </div>
+        </section>
+
         <section class="examples panel panel-section">
             <div class="container">
-                <h2>Sample Circuit: FizzBuzz</h2>
-                <div class="code-shell" role="region" aria-label="Volt sample code">
-                    <pre><code>1v ===&gt; ||[32v] i ===&gt; _|_ ;
-
-(~) [ 15v ] {
-    i ===&gt; ||[32v] tempFizz ===&gt; Mod 3v ===&gt; Eq 0v ===&gt; ||[8v] isFizz ===&gt; _|_ ;
-    i ===&gt; ||[32v] tempBuzz ===&gt; Mod 5v ===&gt; Eq 0v ===&gt; ||[8v] isBuzz ===&gt; _|_ ;
-
-    _/_[isFizz] {
-        HIGH: _/_[isBuzz] {
-            HIGH: "FizzBuzz" ===&gt; [=][PrintNode] ===&gt; _|_ ;
-            LOW:  "Fizz" ===&gt; [=][PrintNode] ===&gt; _|_ ;
+                <h2>Sample circuit: FizzBuzz</h2>
+                <div class="code-shell" role="region" aria-label="Volt FizzBuzz sample">
+                    <pre><code>1v ===&gt; [-32v+] ===&gt; || current_number ;
+(~)[15v] {
+    current_number ===&gt; (%) 3v ===&gt; (=) 0v ===&gt; [+8v-] ===&gt; || is_fizz ;
+    current_number ===&gt; (%) 5v ===&gt; (=) 0v ===&gt; [+8v-] ===&gt; || is_buzz ;
+    _/_[is_fizz] {
+        [^]: _/_[is_buzz] {
+            [^]: "FizzBuzz" ===&gt; (O) ===&gt; _|_ ;
+            [v]: "Fizz" ===&gt; (O) ===&gt; _|_ ;
         }
-        LOW: _/_[isBuzz] {
-            HIGH: "Buzz" ===&gt; [=][PrintNode] ===&gt; _|_ ;
-            LOW:  i ===&gt; [=][PrintNode] ===&gt; _|_ ;
+        [v]: _/_[is_buzz] {
+            [^]: "Buzz" ===&gt; (O) ===&gt; _|_ ;
+            [v]: current_number ===&gt; (O) ===&gt; || current_number ;
         }
     }
-    
-    i ===&gt; Add 1v ===&gt; i ===&gt; _|_ ;
-}</code></pre>
+    current_number ===&gt; (+) 1v ===&gt; || current_number ;
+    is_fizz ===&gt; _|_ ;
+    is_buzz ===&gt; _|_ ;
+}
+current_number ===&gt; _|_ ;</code></pre>
                 </div>
+            </div>
+        </section>
+
+        <section class="quickstart panel panel-section">
+            <div class="container">
+                <h2>Try the interpreter</h2>
+                <p class="section-lead">Clone <a href="https://github.com/ryankkhalil19/volt-interpreter">volt-interpreter</a> and run programs locally.</p>
+
+                <h3 class="subsection-title">Requirements</h3>
+                <ul class="doc-list">
+                    <li>Python 3.9+</li>
+                    <li>textX</li>
+                </ul>
+
+                <h3 class="subsection-title">Setup</h3>
+                <div class="code-shell" role="region" aria-label="Interpreter setup commands">
+                    <pre><code>python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install textX</code></pre>
+                </div>
+
+                <h3 class="subsection-title">Run a program</h3>
+                <p>From the interpreter repo root:</p>
+                <div class="code-shell" role="region" aria-label="Run Volt program">
+                    <pre><code>cd interpreter
+python3 interpreter.py ../sample_programs/hello_world.volt</code></pre>
+                </div>
+
+                <h3 class="subsection-title">Run all tests</h3>
+                <div class="code-shell" role="region" aria-label="Run tests">
+                    <pre><code>./run_tests.sh</code></pre>
+                </div>
+
+                <h3 class="subsection-title">Repository layout</h3>
+                <ul class="doc-list doc-list--compact">
+                    <li><code>interpreter/volt.tx</code> — grammar</li>
+                    <li><code>interpreter/interpreter.py</code> — execution engine + static analysis</li>
+                    <li><code>sample_programs/</code> — example Volt programs</li>
+                    <li><code>tests/test_engine.py</code> — regression and edge cases (authoritative expected behavior)</li>
+                    <li><code>run_tests.sh</code> — one-command test runner</li>
+                </ul>
+
             </div>
         </section>
     </main>
 
     <footer class="panel panel-footer">
         <div class="container">
-            <p>Built by Ryan & Brandon for the Final Project.</p>
+            <p>Built by Ryan &amp; Brandon for the Final Project.</p>
         </div>
     </footer>
 </body>

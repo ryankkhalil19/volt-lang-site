@@ -126,6 +126,18 @@ p {
     color: var(--text-mid);
 }
 
+/* Inline code: token emphasis. Block snippets use pre’s color via pre code inherit. */
+code {
+    font-family: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+    font-size: 0.92em;
+    color: var(--signal-primary);
+}
+
+pre code {
+    font-size: inherit;
+    color: inherit;
+}
+
 .panel {
     border: 1px solid var(--line-subtle);
     background: linear-gradient(180deg, rgba(16, 19, 18, 0.92), rgba(10, 11, 11, 0.95));
@@ -196,6 +208,80 @@ p {
 .hero p {
     margin: 0 auto var(--space-4);
     font-size: clamp(1.03rem, 1.45vw, 1.22rem);
+}
+
+.hero p a {
+    color: var(--signal-hot);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 217, 94, 0.45);
+    text-underline-offset: 0.2em;
+}
+
+.hero p a:hover {
+    color: var(--signal-primary);
+}
+
+.section-lead {
+    margin-bottom: var(--space-2);
+    max-width: 72ch;
+}
+
+.subsection-title {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-1);
+    font-family: "Chakra Petch", "Space Grotesk", sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--signal-secondary);
+}
+
+.doc-list {
+    margin-top: var(--space-2);
+    padding-left: 1.35rem;
+    color: var(--text-mid);
+}
+
+.doc-list li {
+    margin-bottom: var(--space-2);
+}
+
+.doc-list li::marker {
+    color: var(--signal-secondary);
+}
+
+.doc-list code {
+    font-size: 0.9em;
+}
+
+.doc-list--compact li {
+    margin-bottom: var(--space-1);
+}
+
+.snapshot p,
+.examples p {
+    max-width: 72ch;
+}
+
+.panel-section .container a:not(.btn) {
+    color: var(--signal-hot);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 217, 94, 0.4);
+    text-underline-offset: 0.18em;
+}
+
+.panel-section .container a:not(.btn):hover {
+    color: var(--signal-primary);
+}
+
+.panel-footer a {
+    color: var(--signal-secondary);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+}
+
+.panel-footer a:hover {
+    color: var(--signal-primary);
 }
 
 .btn {
@@ -286,7 +372,7 @@ p {
 
 .card {
     position: relative;
-    min-height: 190px;
+    min-height: 148px;
     padding: var(--space-3);
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-sm);
@@ -309,12 +395,21 @@ p {
     color: var(--signal-hot);
 }
 
-.card code {
-    display: block;
+.card-syntax {
     margin-top: 0.35rem;
-    color: var(--signal-primary);
-    font-family: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+}
+
+.card-syntax code {
+    display: block;
     font-size: 0.96rem;
+}
+
+.card-desc {
+    margin-top: var(--space-2);
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    line-height: 1.55;
+    max-width: none;
 }
 
 .card:hover {
